@@ -51,6 +51,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
+                --add-module=/usr/src/ngx-mod-vts/nginx-module-vts-$NGINX_MODULE_VTS_VERSION \
+                --add-module=/usr/src/ngx-mod-rtmp/nginx-rtmp-module-$NGINX_MODULE_RTMP_VERSION \
 	" \
 	&& addgroup -S nginx \
 	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -91,12 +93,9 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& tar -zxC /usr/src/ngx-mod-vts -f nginx-mod-vpts.tar.gz \
 	&& mkdir -p /usr/src/ngx-mod-rtmp \
 	&& tar -zxC /usr/src/ngx-mod-rtmp -f nginx-mod-rtmp.tar.gz \
-	&& ls -l /usr/src/ngx-mod-vts \
 	&& rm nginx.tar.gz \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./configure $CONFIG --with-debug \
-                       --add-module=/usr/src/ngx-mod-vts/nginx-module-vts-$NGINX_MODULE_VTS_VERSION \
-                       --add-module=/usr/src/ngx-mod-rtmp/nginx-rtmp-module-$NGINX_MODULE_RTMP_VERSION \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
 	&& mv objs/nginx objs/nginx-debug \
 	&& mv objs/ngx_http_xslt_filter_module.so objs/ngx_http_xslt_filter_module-debug.so \
@@ -147,8 +146,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+#COPY nginx.conf /etc/nginx/nginx.conf
+#COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
